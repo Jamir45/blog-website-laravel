@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\Comments;
+use App\Models\Post;
 
 class RoutesController extends Controller
 {
     function HomeController() {
-        $posts = DB::table('posts')->orderByDesc('id')->get();
+        $posts = Post::with('comments')->orderByDesc('id')->get();
  
         return view('home', ['posts' => $posts]);
     }
@@ -19,7 +21,8 @@ class RoutesController extends Controller
     function InsertPost(Request $req) {
         $title = $req->input('title');
         $body = $req->input('body');
-        $result = DB::table('posts')->insert([
+
+        $result = Post::insert([
             'title' => $title, 
             'body' => $body
         ]);
@@ -32,7 +35,7 @@ class RoutesController extends Controller
     }
 
     function DeletePost($postId) {
-        $result = DB::table('posts')->where('id', '=', $postId)->delete();
+        $result = Post::where('id', '=', $postId)->delete();
 
         if ($result == true) {
             return ['success'=>'Post Successfully Deleted'];

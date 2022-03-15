@@ -13,6 +13,7 @@ async function postSubmit() {
     const message = selectedId("error");
 
     const result = await axios.post("/insert/post", { title, body });
+    console.log(result);
     if (result.data.success) {
         message.innerHTML = `<p class="text-primary">${result.data.success}</p>`;
         setTimeout(() => {
